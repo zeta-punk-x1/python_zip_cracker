@@ -1,27 +1,29 @@
 import sys
 import zipfile
 import itertools
+import string
 
 filename = ""
 try:
 	filename = sys.argv[1];
 except:
-	print "The filename was not a valid string"
+	print("The filename was not a valid string")
 	exit(1)
-
-#characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-characters = "abcdefghijklmnopqrstuvwxyz"
+	
+#characters = string.ascii_letters
+characters = string.ascii_lowercase
 zipFile = zipfile.ZipFile(filename, "r")
 
 #iterate all possible lengths of the password
 for leng in range(1, len(characters)+1):
-	print "lenght of password: ", leng
+	print("Length of password: ", leng)
 
 	#create an iterator over the cartesian product of all possible permuations
-	it = itertools.product(characters, repeat=leng)
+	opts = itertools.product(characters, repeat=leng)
 
 	#iterate all created permutations
-	for passw in it:
+	for passw in opts:
+			print("Trying with password {} ...".format(passw))
 			try:
 				#join the tupel to a string and set the password
 				passwd = ''.join(passw)
@@ -35,13 +37,14 @@ for leng in range(1, len(characters)+1):
 				zipFile.extractall()
 
 				#if there was no error the password will be shown and the programm exits
-				print "The password is: ", passwd
+				print("The password for file is: " + str(passwd))
 				exit()
 			except RuntimeError:
-				pass
+				print("\nFailed For {}".format(passw))
 			except zipfile.BadZipfile:
-				pass
-			except Exception as e:
+				print("Error opening/operating zipfile")
+				exit(1)
+			except:
 				pass
 
-print "no pw found..."
+print("No passwords were found...\n")
