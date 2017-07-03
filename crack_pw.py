@@ -49,7 +49,7 @@ for leng in range(1, len(characters)+1):
         print("Password Found\n  Password is ->" + str(passwd))
         found = True
       except RuntimeError:
-        print("Failed for test{}\n".format(tmp))
+        print("Failed for test {}\n".format(tmp))
       except:
         print("Error opening/operating zipfile\n")
 
