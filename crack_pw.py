@@ -15,7 +15,7 @@ characters = string.ascii_lowercase
 zipFile = zipfile.ZipFile(filename, "r")
 
 #iterate all possible lengths of the password
-for leng in range(1, len(characters)+1):
+for leng in range(1, 5):
   print("Length of password: ", leng)
 
   #create an iterator over the cartesian product of all possible permuations
@@ -23,11 +23,12 @@ for leng in range(1, len(characters)+1):
 
   #iterate all created permutations
   for passw in opts:
-      print("Trying with password {} ...".format(passw))
+      tmp = ''.join(passw)
+      print("Trying with password {} :".format(tmp))
       try:
-        #join the tupel to a string and set the password
+        #join the tuple to a string and set the password
         passwd = ''.join(passw)
-        zipFile.setpassword(passwd)
+        zipFile.setpassword(passw)
 
         """ 
         try to extract the files from the file
@@ -37,7 +38,7 @@ for leng in range(1, len(characters)+1):
         zipFile.extractall()
 
         #if there was no error the password will be shown and the programm exits
-        print("The password for file is: " + str(passwd))
+        print("The password for file is: " + str(passw))
         exit()
       except RuntimeError:
         print("Failed For {}\n".format(passw))
