@@ -50,7 +50,7 @@ for leng in range(1, len(characters)+1):
         found = True
       except RuntimeError:
         print("Failed for test {}\n".format(tmp))
-      except:
+      except Exception as e:
         print("Error opening/operating zipfile\n")
 
 print("No passwords were found...\n")
