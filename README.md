@@ -1,6 +1,5 @@
-python_zip_cracker
-==================
+# Python Zipfiles cracker
 
-with this script you are able to brute force a password protected
-zip file. it may take some while, but if you are patient, you will be able to recover
-the password for the file.
+Using this script you are able to bruteforce a password protected
+zip file. It may take some while, but if you are patient, you will 
+be able to recover the password for the file.
