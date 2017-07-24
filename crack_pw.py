@@ -10,7 +10,7 @@ except:
   print("The filename is not a valid string!")
   sys.exit(1)
   
-#characters = string.ascii_letters 
+#characters = string.ascii_letters + string.digits
 characters = string.ascii_lowercase
 try:
   zipFile = zipfile.ZipFile(filename, "r")
