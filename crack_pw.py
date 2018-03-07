@@ -3,54 +3,47 @@ import zipfile
 import itertools
 import string
 
-filename = ""
+
+# zipfn : zip-file-name, 
+# chars : are list of chars that can be used in generation of password
+# max_len : maximum length of password to try
+def crack_pw(zipfn, max_len, chars = string.ascii_lowercase):
+	for length in range(max_len+1):
+
+		# passwords generated using cartesians product, to given length
+		pools = itertools.product(chars, repeat = length)
+
+		# Try each generated password
+		for pool in pools:
+			passwd = bytes("".join(pool))
+
+			# If contents are successfully extracted, password is valid
+			# If Runtime Error is caught then password in Invalid, thus try next
+			try:
+				zipfn.extractall(pwd=passwd)
+				return passwd
+			except RuntimeError:
+				continue
+
+	# Flag for password not found
+	return False
+
+
+# UI
+file_name = ""
 try:
-  filename = sys.argv[1];
-except:
-  print("The filename is not a valid string!")
-  sys.exit(1)
-  
-#characters = string.ascii_letters + string.digits
-characters = string.ascii_lowercase
-try:
-  zipFile = zipfile.ZipFile(filename, "r")
-except IOError:
-  # rather than raise() we'll simple print it to screen because we dont't want to scare the user
-  print("IOError: \nFile you entered was not found!\nTry again!")     
-  sys.exit(1)
+	file_name = sys.argv[1]
+	zip_file = zipfile.ZipFile(file_name, "r")
+except (IOError, Exception):
+	print("File not found! Try another valid string!")
+	sys.exit(1)
 
-found = False
-#iterate all possible lengths of the password
-for leng in range(1, len(characters)+1):
-  print("Length of password: ", leng)
+print("..Try all possible password combinations!\n Keep Patience!")
+recovered_passwd = crack_pw(zip_file, 16)
+zip_file.close()
 
-  #create an iterator over the cartesian product of all possible permuations
-  opts = itertools.product(characters, repeat=leng)
-
-  #iterate all created permutations
-  for passw in opts:
-    if found:
-      sys.exit(0)
-    else:
-      tmp = ''.join(passw)
-      print("Trying with password {} :".format(tmp))
-      try:
-        #join the tuple to a string and set the password
-        passwd = ''.join(passw)
-        zipFile.setpassword(passwd)
-
-        """ 
-          try to extract the files from the file
-          if the password is wrong, an exception is thrown,
-            (RuntimeError), which is caught in the except part
-        """
-        zipFile.extractall()
-
-        print("Password Found\n  Password is ->" + str(passwd))
-        found = True
-      except RuntimeError:
-        print("Failed for test {}\n".format(tmp))
-      except Exception as e:
-        print("Error opening/operating zipfile\n")
-
-print("The password was not found...\n")
+if not recovered_passwd:
+	print("\n  > No password found! Try expanding character set!")
+else:
+	print("\n  > Password for %s: %s" %(file_name, recovered_passwd))
+sys.exit(0)
