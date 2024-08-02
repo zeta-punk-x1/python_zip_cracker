@@ -1,4 +1,4 @@
-# Python Zip files cracker
+# Python Zip files Cracker
 
 Using this script you are able to bruteforce a password protected
 zip file. It may take some while, but if you are patient, you will 
